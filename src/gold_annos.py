@@ -102,9 +102,9 @@ def main():
                 break
             i += 1
 
-            if solution is None:
-                print(f"No solution found for prompt: {prompt}")
-                continue
+        if solution is None:
+            print(f"No solution found for prompt: {prompt}")
+            continue
 
         for subgraph in legal_subgraphs:
             sorted_subgraph_indices = topological_sort(graph, subgraph)
@@ -115,7 +115,7 @@ def main():
             print()
             print("Topologically sorted claims:")
             for subclaim in sorted_subclaims:
-                print(f"- {subclaim}")
+                print(f"> {subclaim}")
             print()
 
             while True:
@@ -129,6 +129,8 @@ def main():
                 question['graph_annotations']['y'].append(subgraph)
             else:
                 question['graph_annotations']['n'].append(subgraph)
+            
+            print()
 
             # Save the annotation to the file each time one is completed
             save_json(data, file_path)

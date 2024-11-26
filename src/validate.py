@@ -327,9 +327,9 @@ if __name__ == "__main__":
     
     methods = []
     
-    methods.append([f"Subgraph Filtering", "blue", "simult", "graph", "graph", 0])
-    methods.append([f"Descendants Weight Boosting", "red", "simult", "graph", "graph", 0.5])
-    methods.append([f"Baseline", "orange", "ind", "ind", "graph", 0])
+    methods.append([f"Subgraph Filtering", "blue", "simult", "graph", "manual", 0])
+    methods.append([f"Descendants Weight Boosting", "red", "simult", "graph", "manual", 0.5])
+    methods.append([f"Baseline", "orange", "ind", "ind", "manual", 0])
 
     calib_alphas = array = np.arange(0.25, 0, -0.025)
 
