@@ -48,13 +48,16 @@ def manual_anno(subgraph, question, filepath="/Users/maxonrubin-toles/Desktop/Co
         # Output the prompt and corresponding sorted claims
         print()
         print(f"Prompt: {question['prompt']}")
+        print()
         print("Subgraph (sorted topologically):")
+        print()
         sorted_subgraph_claims = [question["claims"][i]["subclaim"] for i in sorted_indices if i in subgraph]
         
         # Print the sorted claims corresponding to the subgraph
         for claim in sorted_subgraph_claims:
-            print(claim)
+            print(f"> {claim}")
         
+        print()
         # Ask user for input
         user_input = input("Enter '1' if this subgraph is correct, '0' if it is incorrect: ")
         
