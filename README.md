@@ -1,10 +1,10 @@
-# CONFORMAL LANGUAGE MODEL REASONING WITH COHERENT FACTUALITY
-This is the repository for the paper "CONFORMAL LANGUAGE MODEL REASONING WITH COHERENT FACTUALITY" by [Maya Gambhir](mayapalgambhir.com), [Maxon Rubin Toles](https://maxrubintoles.github.io/), [Keshav Ramji](https://keshavramji.com/), [Aaron Roth](https://www.cis.upenn.edu/~aaroth/), and [Surbhi Goel](surbhigoel.com)
+# Conformal Language Model Reasoning with Coherent Factuality
+This is the repository for the paper "Conformal Language Model Reasoning with Cohrerent Factuality" by [Maya Gambhir](mayapalgambhir.com), [Maxon Rubin Toles](https://maxrubintoles.github.io/), [Keshav Ramji](https://keshavramji.com/), [Aaron Roth](https://www.cis.upenn.edu/~aaroth/), and [Surbhi Goel](surbhigoel.com).
 
 Much of this code was forked from the [repository](https://github.com/tatsu-lab/conformal-factual-lm/blob/main/README.md?plain=1) by Mohri and Hasimoto for their paper Language Models with Conformal Factuality Guarantees.
 
 ## Setup
-Set appropriate API keys for LLama or GPT replication.  
+Export appropriate API keys for LLama or GPT replication.  
 
 ## Files
 - 'validate.py': Run this file after setup to view plots
