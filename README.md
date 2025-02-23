@@ -7,12 +7,12 @@ Much of this code was forked from the [repository](https://github.com/tatsu-lab/
 Export appropriate API keys for LLama or GPT replication.  
 
 ## Files
-- 'validate.py': Run this file after setup to view plots
+- 'validate.py': run this file after setup to view plots
 - 'gold_annos.py': convenient annotation UI in terminal
-- 'graphs.py : generates dependency graphs for a list of subclaims
-- 'non_conformity.py' : helper functions to calculate non-conformity scores
-- 'sayless.py' : breaks down outputs into subclaims, and merges subclaims back into paragraphs
-- 'greedy.py', 'simult.py' implement both greedy and subgraph filtering algorithms respectively
+- 'graphs.py': generates dependency graphs for a list of subclaims
+- 'non_conformity.py': helper functions to calculate non-conformity scores
+- 'sayless.py': breaks down outputs into subclaims and merges subclaims back into paragraphs
+- 'greedy.py', 'simult.py': implement greedy and subgraph filtering algorithms respectively
 - 'get_subs_scores.py': 
 - 'gen_calib.py': 
 
