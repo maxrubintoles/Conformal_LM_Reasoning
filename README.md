@@ -1,20 +1,20 @@
-# Language Models with Conformal Factuality Guarantees
+# Conformal Language Model Reasoning with Coherent Factuality
+This is the repository for the paper "Conformal Language Model Reasoning with Cohrerent Factuality" by [Maya Gambhir](mayapalgambhir.com), [Maxon Rubin Toles](https://maxrubintoles.github.io/), [Keshav Ramji](https://keshavramji.com/), [Aaron Roth](https://www.cis.upenn.edu/~aaroth/), and [Surbhi Goel](surbhigoel.com).
 
-This is the official repository for the paper Language Models with Conformal Factuality Guarantees by [Christopher Mohri](https://scholar.google.com/citations?user=_otSGXcAAAAJ) and [Tatsunori Hashimoto](https://thashim.github.io/). 
+Much of this code was forked from the [repository](https://github.com/tatsu-lab/conformal-factual-lm/blob/main/README.md?plain=1) by Mohri and Hasimoto for their paper Language Models with Conformal Factuality Guarantees.
 
-## Installation
-Install the packages in `requirements.txt` and also run the pre-commit script `pre-commit install`.
+## Setup
+Export appropriate API keys for LLama or GPT replication.  
 
 ## Files
-- `main.py`: shows an example of running inference on one example 
-- `sayless.py`: core functions necessary for inference (sub-claim splitting + merging)
-- `factscore.py`: code for FActScore dataset
-- `nq.py`: code for Natural Questions dataset
-- `math_data.py`: code for MATH dataset
-- `calibrate_thresh.py`: code for analyzing each dataset (producing sub-claims for annotation, computing thresholds, producing plots, generating new outputs)
+- 'validate.py': Run this file after setup to view plots
+- 'gold_annos.py': convenient annotation UI in terminal
+- 'graphs.py : generates dependency graphs for a list of subclaims
+- 'non_conformity.py' : helper functions to calculate non-conformity scores
+- 'sayless.py' : breaks down outputs into subclaims, and merges subclaims back into paragraphs
+- 'greedy.py', 'simult.py' implement both greedy and subgraph filtering algorithms respectively
+- 'get_subs_scores.py': 
+- 'gen_calib.py': 
 
-## Simple FActScore example
-The script `factscore.py` will first dump a jsonl with sub-claims into `out/factscore_subclaims.jsonl`.
-Afterwards, the user will need to copy the file to `data/factscore_annotations.jsonl` and annotate the correctness entries in the json.
-Then, the user can compute conformal thresholds, produce any of the plots appearing in the paper, and generate conformally factual outputs by setting the appropriate fields in `analyze_dataset`.
-`nq.py` and `math_data.py` have the same functionality but for the Natural Questions and MATH datasets.
+## Datasets
+We make use of both [MATH](https://arxiv.org/abs/2103.03874) and [FELM](http://arxiv.org/abs/2310.00741) datasets in our evaluations. 
