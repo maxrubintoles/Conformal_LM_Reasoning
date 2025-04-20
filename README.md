@@ -4,7 +4,7 @@ This is the repository for the paper "Conformal Language Model Reasoning with Co
 Much of this code was forked from Mohri and Hashimoto's repo [repository](https://github.com/tatsu-lab/conformal-factual-lm/blob/main/README.md?plain=1) for "Language Models with Conformal Factuality Guarantees."
 
 ## Setup
-Export appropriate API keys for LLama or GPT replication.  
+Export appropriate API keys for LLamM or GPT replication.  
 
 ## Files
 - 'validate.py': run this file after setup to view plots
