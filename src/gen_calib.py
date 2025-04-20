@@ -1,12 +1,10 @@
 import io
 import json
 import os
-
+import numpy as np
 from openai import OpenAI
 from together import Together
-import numpy as np
-
-from helpers.get_subs_scores import generate_data
+from src.helpers.get_subs_scores import generate_data
 from datasets import load_dataset
 
 CONFIDENCE_METHODS_RAW = [
@@ -16,14 +14,6 @@ CONFIDENCE_METHODS_RAW = [
     "frequency",
     "frequency+gpt",
     "optimal",
-]
-CONFIDENCE_METHODS_RANKING = [
-    "random-ranking",
-    "baseline-ranking",
-    "gpt-ranking",
-    #   "frequency-ranking",
-    "frequency+gpt-ranking",
-    "optimal-ranking",
 ]
 
 MODEL = "meta-llama/Meta-Llama-3.1-70B-Instruct-Turbo"
@@ -48,16 +38,17 @@ if __name__ == "__main__":
     else:
         API_KEY = os.environ.get("OAI_KEY")
         CLIENT = OpenAI(api_key=API_KEY)
-    
+
     if API_KEY is None:
         raise ValueError(
-            "Key is not set - please set OAI_KEY to your OpenAI key if querying GPT; if querying an open-source model, set TOGETHER_API_KEY to your Together key (with command: export [PLATFORM]_KEY=[[PLATFORM]]_KEY])"
+            "Key is not set - please set OAI_KEY to your OpenAI key if querying GPT; if querying the Together API, set TOGETHER_API_KEY to your Together key (with command: export [PLATFORM]_KEY=[[PLATFORM]]_KEY])"
         )
+
     
     # Load questions from math
     dataset = load_dataset("competition_math")
     input_dataset = [question["problem"] for question in dataset["test"]][0:50]
-    with io.open("out/MATH.json", "w") as fopen:
+    with io.open("data/MATH.json", "w") as fopen:
         json.dump(dataset["test"][0:50], fopen, indent=4)
 
     generate_data(
@@ -67,7 +58,6 @@ if __name__ == "__main__":
         MODEL,
         BREAKDOWN_PROMPT,
         CONFIDENCE_METHODS_RAW,
-        CONFIDENCE_METHODS_RANKING,
         open_source=OPEN_SOURCE,
-        create_graphs=True
+        create_graphs=True,
     )

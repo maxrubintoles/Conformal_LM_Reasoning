@@ -5,12 +5,12 @@ from tqdm import tqdm
 import matplotlib.pyplot as plt
 import os
 from scipy.stats import rankdata
-from helpers.sayless import (
+from src.helpers.sayless import (
     get_frequency_scores,
     get_subclaims,
     query_model,
 )
-from helpers.graphs import add_graphs
+from src.helpers.graphs import add_graphs
 import random
 
 CORRECT_ANNOTATIONS = ["Y", "S", "1"]
@@ -153,21 +153,20 @@ def generate_data(
     model,
     breakdown_prompt,
     confidence_methods_raw,
-    confidence_methods_ranking,
-    open_source = False,
-    create_graphs = True
+    open_source=False,
+    create_graphs=True,
 ):
     """
     Performs the desired analysis for a given dataset.
     """
     # Generate outputs and subclaims if they do not exist, in {dataset_prefix}_subclaims.json file that
-    # can be (manually) copied over to /data/{dataset_prefix}_annotations.json and then annotated.
+    # can be (manually) annotated.
     if open_source:
         dataset_prefix = dataset_prefix + "_open"
 
     if not os.path.exists(f"data/{dataset_prefix}_annotations.json"):
         print(
-            f"Creating dataset for annotation. When done, please copy data/{dataset_prefix}_subclaims.json to data/{dataset_prefix}_annotations.json and annotate."
+            f"Creating dataset for annotation. When done, please manualy annotate data/{dataset_prefix}_subclaims.json."
         )
         data = []
         # Generate outputs for each prompt
@@ -176,9 +175,7 @@ def generate_data(
             output = query_model(client, prompt, model)
 
             # Extract subclaims. "annotation" field is automtically set to 'N'.
-            subclaims = get_subclaims(
-                client, output, model
-            )
+            subclaims = get_subclaims(client, output, model)
 
             claim_list = [
                 {
@@ -210,7 +207,7 @@ def generate_data(
             add_scores(
                 calibration_data,
                 f"data/{dataset_prefix}_subclaims_with_scores.json",
-                confidence_methods_raw + confidence_methods_ranking,
+                confidence_methods_raw,
                 client,
                 model,
             )

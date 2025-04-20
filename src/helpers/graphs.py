@@ -1,8 +1,9 @@
 import json
 import os
 import copy
-from tqdm import tqdm
 import re
+from tqdm import tqdm
+from collections import deque
 
 # GPT Graph Generation Prompt
 
@@ -61,7 +62,9 @@ Now, I'm going to give you another question and list of subclaims, as before. Wi
 '''
 
 # Open-source generation (Llama has more trouble generating dependency graphs, especially since it produces outputs with more subclaims)
-graph_few_shot = prompt = """
+graph_few_shot = (
+    prompt
+) = """
 You are a system designed to create dependency graphs for subclaims in response to a given question. Your output must strictly adhere to the following instructions:
 
 1. Graph Description:
@@ -125,6 +128,7 @@ Examples:
 Now provide your adjacency list for the following question and subclaims:
 """
 
+
 def parse_graph_output(output):
     """
     Parses the output from the model to extract the adjacency list.
@@ -132,15 +136,15 @@ def parse_graph_output(output):
     Replaces non-zero entries with 1 if invalid values are found.
     """
     # Remove any explanation or commentary before the list of lists
-    output = re.sub(r'^[^\[]*\[', '[', output, flags=re.DOTALL)
-    
+    output = re.sub(r"^[^\[]*\[", "[", output, flags=re.DOTALL)
+
     # Remove any newlines or extra spaces within the list of lists
-    output = re.sub(r'\s+', '', output)
-    
+    output = re.sub(r"\s+", "", output)
+
     try:
         # Evaluate the cleaned output to get the adjacency list
         adjacency_list = eval(output)
-        
+
         # Ensure the adjacency list is a list of lists
         if all(isinstance(row, list) for row in adjacency_list):
             # Replace all non-zero entries with 1
@@ -155,10 +159,18 @@ def parse_graph_output(output):
     return None
 
 
-def query_model_system(client, system_prompt, user_prompt, model, max_tokens=2000, temperature=0, n_samples=1):
+def query_model_system(
+    client,
+    system_prompt,
+    user_prompt,
+    model,
+    max_tokens=2000,
+    temperature=0,
+    n_samples=1,
+):
     messages = [
         {"role": "system", "content": system_prompt},
-        {"role": "user", "content": user_prompt}
+        {"role": "user", "content": user_prompt},
     ]
     completion = client.chat.completions.create(
         model=model,
@@ -169,11 +181,13 @@ def query_model_system(client, system_prompt, user_prompt, model, max_tokens=200
     )
     return completion.choices[0].message.content
 
+
 def generate_template(num):
     """
     Generates a template adjacency list of size num × num with all zeros.
     """
     return [[0] * num for _ in range(num)]
+
 
 def sequential_adjacency_list(num_nodes):
     """
@@ -188,10 +202,11 @@ def sequential_adjacency_list(num_nodes):
         adj_list[i][i + 1] = 1
     return adj_list
 
+
 def is_cyclic(adj_list):
     """
     Detects if a graph is cyclic using Kahn's algorithm.
-    Returns True if the graph is cyclic, False otherwise.
+    Returns True if graph is cyclic, False o.w.
     """
     in_degree = {i: 0 for i in range(len(adj_list))}
 
@@ -219,51 +234,51 @@ def is_cyclic(adj_list):
     # If all nodes are not visited, there's a cycle
     return visited_count != len(adj_list)
 
+
 def add_graphs(questions, client, model):
     """
     Queries model to generate deducibility graph proxies for responses.
     If the generated graph is cyclic, replaces it with a sequential adjacency list.
     """
     updated_questions = copy.deepcopy(questions)
-    
+
     for question in tqdm(updated_questions, desc="Processing Questions"):
         # Define the system prompt
         system_prompt = graph_few_shot
-        
+
         # Define the user prompt
         num_subclaims = len(question["claims"])
         user_prompt = (
-            "Question: " + question["prompt"] +
-            f"\n\nNUM: {num_subclaims}\nSubclaims:"
+            "Question: " + question["prompt"] + f"\n\nNUM: {num_subclaims}\nSubclaims:"
         )
-        
+
         # Add subclaims to the prompt
         for j, claim in enumerate(question["claims"], start=1):
             user_prompt += f"\n{j}. " + claim["subclaim"]
-        
+
         # Generate the template adjacency list
         template = generate_template(num_subclaims)
         user_prompt += f"\n\nTemplate:\n{template}"
-        
+
         max_attempts = 5
         attempts = 0
         valid_graph = False
         parsed_graph = None
-        
+
         while attempts < max_attempts and not valid_graph:
             # Query the model
             dep_graph = query_model_system(
-                client=client, 
-                system_prompt=system_prompt, 
-                user_prompt=user_prompt, 
-                model=model, 
-                max_tokens=1000, 
-                temperature=0
+                client=client,
+                system_prompt=system_prompt,
+                user_prompt=user_prompt,
+                model=model,
+                max_tokens=1000,
+                temperature=0,
             )
-            
+
             # Parse and validate the graph
             parsed_graph = parse_graph_output(dep_graph)
-            
+
             if parsed_graph and len(parsed_graph) == num_subclaims:
                 valid_graph = True
             else:
@@ -277,36 +292,43 @@ def add_graphs(questions, client, model):
                 # Store the valid acyclic graph
                 question["dep_graph"] = parsed_graph
         else:
-            print(f"Failed to generate valid graph after {max_attempts} attempts for question: {question['prompt']}")
+            print(
+                f"Failed to generate valid graph after {max_attempts} attempts for question: {question['prompt']}"
+            )
             print(user_prompt)
             # Replace with sequential graph if unable to generate a valid graph
             question["dep_graph"] = sequential_adjacency_list(num_subclaims)
-        
+
     return updated_questions
 
+
 def load_json(file_path):
-    with open(file_path, 'r') as file:
+    with open(file_path, "r") as file:
         return json.load(file)
 
+
 def save_json(data, file_path):
-    with open(file_path, 'w') as file:
+    with open(file_path, "w") as file:
         json.dump(data, file, indent=4)
+
 
 def main(file_path):
     data = load_json(file_path)
-    
+
     for question in data:
         print(f"Prompt: {question['prompt']}")
         print(f"Original Output: {question.get('original_output', 'N/A')}")
         print("Subclaims:")
         for i, claim in enumerate(question["claims"], start=1):
             print(f"{i}. {claim['subclaim']}")
-        
+
         while True:
-            user_input = input("Please enter the dependency graph as a list (or type 'skip' to skip): ")
-            if user_input.lower() == 'skip':
+            user_input = input(
+                "Please enter the dependency graph as a list (or type 'skip' to skip): "
+            )
+            if user_input.lower() == "skip":
                 break
-            
+
             try:
                 gold_graph = json.loads(user_input)
                 if isinstance(gold_graph, list):
@@ -318,6 +340,7 @@ def main(file_path):
                     print("Input is not a valid list. Please try again.")
             except json.JSONDecodeError:
                 print("Invalid JSON format. Please try again.")
+
 
 if __name__ == "__main__":
     file_path = "MATH_annotated.json"

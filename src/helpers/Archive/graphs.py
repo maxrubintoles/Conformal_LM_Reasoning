@@ -61,7 +61,9 @@ Now, I'm going to give you another question and list of subclaims, as before. Wi
 '''
 
 # Open-source generation (Llama has more trouble generating dependency graphs, especially since it produces outputs with more subclaims)
-graph_few_shot = prompt = """
+graph_few_shot = (
+    prompt
+) = """
 You are a system designed to create dependency graphs for subclaims in response to a given question. Your output must strictly adhere to the following instructions:
 
 1. Graph Description:
@@ -117,33 +119,44 @@ Now provide your adjacency list for the following question and subclaims:
 """
 
 
-
 def parse_graph_output(output):
     """
     Parses the output from the model to extract the adjacency list.
     """
     # Remove any explanation or commentary before the list of lists
-    output = re.sub(r'^[^\[]*\[', '[', output, flags=re.DOTALL)
-    
+    output = re.sub(r"^[^\[]*\[", "[", output, flags=re.DOTALL)
+
     # Remove any newlines or extra spaces within the list of lists
-    output = re.sub(r'\s+', '', output)
-    
+    output = re.sub(r"\s+", "", output)
+
     try:
         # Evaluate the cleaned output to get the adjacency list
         adjacency_list = eval(output)
-        
+
         # Ensure the adjacency list is a list of lists of integers
-        if all(isinstance(row, list) and all(isinstance(i, int) for i in row) for row in adjacency_list):
+        if all(
+            isinstance(row, list) and all(isinstance(i, int) for i in row)
+            for row in adjacency_list
+        ):
             return adjacency_list
     except (SyntaxError, ValueError):
         pass
-    
+
     return None
 
-def query_model_system(client, system_prompt, user_prompt, model, max_tokens=2000, temperature=0, n_samples=1):
+
+def query_model_system(
+    client,
+    system_prompt,
+    user_prompt,
+    model,
+    max_tokens=2000,
+    temperature=0,
+    n_samples=1,
+):
     messages = [
         {"role": "system", "content": system_prompt},
-        {"role": "user", "content": user_prompt}
+        {"role": "user", "content": user_prompt},
     ]
     completion = client.chat.completions.create(
         model=model,
@@ -154,64 +167,79 @@ def query_model_system(client, system_prompt, user_prompt, model, max_tokens=200
     )
     return completion.choices[0].message.content
 
+
 def add_graphs(questions, client, model):
     """
     Queries model to generate deducibility graph proxies for responses
     """
     updated_questions = copy.deepcopy(questions)
-    
+
     for question in tqdm(updated_questions, desc="Processing Questions"):
         # Define the system prompt
         system_prompt = graph_few_shot
-        
+
         # Define the user prompt
         user_prompt = "Question: " + question["prompt"] + "\n"
         for j, claim in enumerate(question["claims"], start=1):
             user_prompt += f"\nSubclaim {j}: " + claim["subclaim"]
-        
+
         max_attempts = 5
         attempts = 0
         valid_graph = False
-        
+
         while attempts < max_attempts and not valid_graph:
-            dep_graph = query_model_system(client=client, system_prompt=system_prompt, user_prompt=user_prompt, model=model, max_tokens=1000, temperature=0)
+            dep_graph = query_model_system(
+                client=client,
+                system_prompt=system_prompt,
+                user_prompt=user_prompt,
+                model=model,
+                max_tokens=1000,
+                temperature=0,
+            )
             parsed_graph = parse_graph_output(dep_graph)
-            
+
             if parsed_graph and len(parsed_graph) == len(question["claims"]):
                 question["dep_graph"] = parsed_graph
                 valid_graph = True
             else:
                 attempts += 1
-        
+
         if not valid_graph:
-            print(f"Failed to generate valid graph after {max_attempts} attempts for question: {question['prompt']}")
+            print(
+                f"Failed to generate valid graph after {max_attempts} attempts for question: {question['prompt']}"
+            )
             question["dep_graph"] = dep_graph  # Store the erroneous graph
-        
+
     return updated_questions
 
+
 def load_json(file_path):
-    with open(file_path, 'r') as file:
+    with open(file_path, "r") as file:
         return json.load(file)
 
+
 def save_json(data, file_path):
-    with open(file_path, 'w') as file:
+    with open(file_path, "w") as file:
         json.dump(data, file, indent=4)
+
 
 def main(file_path):
     data = load_json(file_path)
-    
+
     for question in data:
         print(f"Prompt: {question['prompt']}")
         print(f"Original Output: {question.get('original_output', 'N/A')}")
         print("Subclaims:")
         for i, claim in enumerate(question["claims"], start=1):
             print(f"{i}. {claim['subclaim']}")
-        
+
         while True:
-            user_input = input("Please enter the dependency graph as a list (or type 'skip' to skip): ")
-            if user_input.lower() == 'skip':
+            user_input = input(
+                "Please enter the dependency graph as a list (or type 'skip' to skip): "
+            )
+            if user_input.lower() == "skip":
                 break
-            
+
             try:
                 gold_graph = json.loads(user_input)
                 if isinstance(gold_graph, list):
@@ -223,6 +251,7 @@ def main(file_path):
                     print("Input is not a valid list. Please try again.")
             except json.JSONDecodeError:
                 print("Invalid JSON format. Please try again.")
+
 
 if __name__ == "__main__":
     file_path = "MATH_annotated.json"

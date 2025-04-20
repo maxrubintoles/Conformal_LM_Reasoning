@@ -6,10 +6,11 @@ import re
 # Open-Source model tends to break down claims unnecessarily, requires additional prompt-engineering
 BREAKDOWN_PROMPT = "Please breakdown the following input into a set of independent claims, and return the output as a jsonl, where each line is {subclaim:[CLAIM], gpt-score:[CONF]}.\n The confidence score [CONF] should represent your confidence in the claim, where a 1 is obvious facts and results like 'The earth is round' and '1+1=2'. A 0 is for claims that are very obscure or difficult for anyone to know, like the birthdays of non-notable people. Please only include the subclaims in jsonl format with no other text at all. The input is: "
 
+
 def parse_jsonl_output(output):
     # Use regular expression to find all JSON objects in the output
-    json_objects = re.findall(r'\{.*?\}', output, re.DOTALL)
-    
+    json_objects = re.findall(r"\{.*?\}", output, re.DOTALL)
+
     # Parse each JSON object and store in a list
     parsed_objects = []
     for obj in json_objects:
@@ -18,8 +19,9 @@ def parse_jsonl_output(output):
             parsed_objects.append(json.loads(obj))
         except json.JSONDecodeError:
             continue
-    
+
     return parsed_objects
+
 
 def query_model(client, prompt, model, max_tokens=1000, temperature=0, n_samples=1):
     messages = [{"role": "user", "content": prompt}]
@@ -51,6 +53,7 @@ def say_less(client, prompt, model, output, threshold):
     merged_output = merge_subclaims(client, accepted_subclaims, model, prompt)
 
     return merged_output, (accepted_subclaims, subclaims)
+
 
 def get_subclaims(
     client,
