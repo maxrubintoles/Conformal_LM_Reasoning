@@ -1,7 +1,9 @@
+# .gitignore
 # dont commit the actual api keys or other personal info to the public github
-#configs/authors.txt
-configs/keys.ini
-#configs/paper_topics.txt
-# dont commit venv and ide stuff
-venv
-.idea
+__pycache__/
+*.py[cod]
+*.ipynb_checkpoints
+.env
+venv/
+*.log
+.DS_Store

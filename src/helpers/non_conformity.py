@@ -93,7 +93,7 @@ def manual_anno(
             question["graph_annotations"]["n"].append(idxs)
             print("Updated graph_annotations (n):", question["graph_annotations"])
             updated = True
-        
+
         print(idxs)
 
         # If there was an update, write the changes back to the file
@@ -117,7 +117,7 @@ def manual_anno(
                 print(f"Updated annotations saved to {in_path}.")
             except IOError as e:
                 print(f"Error saving file: {e}")
-                
+
         return 1 if user_input == "1" else 0
 
 
@@ -243,7 +243,9 @@ o/p: "permissible risk" threshold,
 """
 
 
-def r_score(question, noise, method="simult", anno_type="manual", beta=None, in_path=None):
+def r_score(
+    question, noise, method="simult", anno_type="manual", beta=None, in_path=None
+):
     if method == "ind_filtered":
         method = "ind"
     if method == "simult":

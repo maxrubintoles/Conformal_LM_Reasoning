@@ -44,7 +44,6 @@ if __name__ == "__main__":
             "Key is not set - please set OAI_KEY to your OpenAI key if querying GPT; if querying the Together API, set TOGETHER_API_KEY to your Together key (with command: export [PLATFORM]_KEY=[[PLATFORM]]_KEY])"
         )
 
-    
     # Load questions from math
     dataset = load_dataset("competition_math")
     input_dataset = [question["problem"] for question in dataset["test"]][0:50]

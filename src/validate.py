@@ -42,7 +42,7 @@ def calibration(method, alphas, in_path):
 
     with open(in_path, "r") as file:
         try:
-        # Parse the JSON content
+            # Parse the JSON content
             data = json.load(file)
         except json.JSONDecodeError as e:
             print(f"Error parsing JSON: {e}")
@@ -75,13 +75,13 @@ def calibration(method, alphas, in_path):
             if i >= 1:
                 with open(in_path, "r") as file:
                     try:
-                    # Parse the JSON content
+                        # Parse the JSON content
                         data = json.load(file)
                     except json.JSONDecodeError as e:
                         print(f"Error parsing JSON: {e}")
 
                     questions = data.get("data", [])
-                
+
             partition = len(questions) // 2
 
             sample_error = []
@@ -102,7 +102,7 @@ def calibration(method, alphas, in_path):
                 mult = 0
 
             calibration_scores = [
-                r_score(q, n, method[2], method[3], beta=mult, in_path = in_path)
+                r_score(q, n, method[2], method[3], beta=mult, in_path=in_path)
                 for q, n in zip(calibration_set, noise[:partition])
             ]
             quantile = compute_quantile(calibration_scores, alpha)
@@ -110,7 +110,7 @@ def calibration(method, alphas, in_path):
             # validate error
             for q, n in zip(validation_set, noise[partition:]):
                 U_filt = highest_risk_graph(quantile, n, q, method[2], beta=mult)
-                if annotate(U_filt, q, method[4],filepath=in_path) == 0:
+                if annotate(U_filt, q, method[4], filepath=in_path) == 0:
                     sample_error.append(1)
                 else:
                     sample_error.append(0)
@@ -140,7 +140,7 @@ def validation(method, alphas, in_path):
             print(f"Error parsing JSON: {e}")
 
     questions = data.get("data", [])
-    
+
     n = len(questions)
     if method[2] == "oracle":
 
@@ -243,7 +243,7 @@ def get_plots(methods, alphas_calib, alphas_valid, in_path, out_path):
             print(f"Error parsing JSON: {e}")
 
     questions = data.get("data", [])
-    
+
     n = len(questions)
 
     # store calibration results for each method
@@ -383,18 +383,16 @@ if __name__ == "__main__":
     # directory of current script
     base_dir = os.getcwd()
 
-
     # construct relative path to 'data' directory
     data_dir = os.path.join(base_dir, "data")
 
     # prompt user for full path
     filename = input("Enter the filename (e.g., MATH_open_annotations.json): ").strip()
-    
+
     # construct ip/op path
     in_path = os.path.join(data_dir, filename)
     out_path = os.path.join(base_dir, "out")
 
-    
     # check if file exists
     if not os.path.exists(in_path):
         print(f"Error: The file '{filename}' does not exist in the 'data' directory.")

@@ -77,9 +77,7 @@ def main():
     first_question_index = int(sys.argv[1])
     last_question_index = int(sys.argv[2])
 
-    file_name = input(
-        "Enter the file name (e.g., MATH_open_subclaims.json): "
-    )
+    file_name = input("Enter the file name (e.g., MATH_open_subclaims.json): ")
     file_path = f"data/{file_name}"
     key_file_path = "data/MATH_key.json"
 
@@ -155,7 +153,7 @@ def main():
 
             # Save the annotation to the file each time one is completed
             save_json(data, file_path)
-        
+
     # Rename the file to have suffix "annotations" instead of "subclaims"
     if file_path.endswith("subclaims.json"):
         new_file_path = file_path.replace("subclaims.json", "annotations.json")
