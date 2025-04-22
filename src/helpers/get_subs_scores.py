@@ -203,7 +203,6 @@ def generate_data(
                 f"data/{dataset_prefix}_annotations.json"
             )
             print(dataset_prefix)
-            # print(calibration_data)
             add_scores(
                 calibration_data,
                 f"data/{dataset_prefix}_subclaims_with_scores.json",

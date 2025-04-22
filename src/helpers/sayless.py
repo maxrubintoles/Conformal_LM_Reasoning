@@ -2,7 +2,6 @@ import json
 import re
 
 # Default prompt to break into subclaims.
-# BREAKDOWN_PROMPT = "Please breakdown the following input into a set of small, independent claims, and return the output as a jsonl, where each line is {subclaim:[CLAIM], gpt-score:[CONF]}.\n The confidence score [CONF] should represent your confidence in the claim, where a 1 is obvious facts and results like 'The earth is round' and '1+1=2'. A 0 is for claims that are very obscure or difficult for anyone to know, like the birthdays of non-notable people. Please only include the subclaims in jsonl format with no other text at all. The input is: "
 # Open-Source model tends to break down claims unnecessarily, requires additional prompt-engineering
 BREAKDOWN_PROMPT = "Please breakdown the following input into a set of independent claims, and return the output as a jsonl, where each line is {subclaim:[CLAIM], gpt-score:[CONF]}.\n The confidence score [CONF] should represent your confidence in the claim, where a 1 is obvious facts and results like 'The earth is round' and '1+1=2'. A 0 is for claims that are very obscure or difficult for anyone to know, like the birthdays of non-notable people. Please only include the subclaims in jsonl format with no other text at all. The input is: "
 
@@ -77,7 +76,6 @@ def get_subclaims(
             "content": breakdown_prompt + output,
         },
     ]
-    # TODO: use query_model function here instead.
     completion = client.chat.completions.create(
         model=model, messages=messages, max_tokens=max_tokens, temperature=temperature
     )
@@ -115,7 +113,6 @@ def get_frequency_scores(client, subclaims, prompt, n_samples, model):
     )
 
     # Count the number of times the alternate outputs support the sub-claims (using LM).
-    # TODO: should this really be -1, 0, 1? Before it was 0, 1.
     final_scores = [0.0] * len(subclaims)
     for output in alternate_outputs:
         counting_prompt = (

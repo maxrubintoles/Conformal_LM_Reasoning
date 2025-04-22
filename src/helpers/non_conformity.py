@@ -255,15 +255,6 @@ def r_score(
     elif method == "ind":
         U = simult_search(question, noise, ind=True)
 
-    # Not sure what these methods do
-    """
-    elif method == "cot":
-        U = greedy_search(question, noise, cot = True)
-    elif method == 'adj_freq':
-        U = simult_search(question, noise, risk = 'prop-freq')
-    
-    """
-
     if anno_type == "manual":
 
         for i in range(len(U)):
