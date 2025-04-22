@@ -1,0 +1,25 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite the following paper."
+title: "Conformal Language Model Reasoning with Coherent Factuality"
+authors:
+  - family-names: Rubin-Toles
+    given-names: Maxon
+    affiliation: University of Pennsylvania, Harvard University
+  - family-names: Gambhir
+    given-names: Maya
+    affiliation: University of Pennsylvania
+  - family-names: Ramji
+    given-names: Keshav
+    affiliation: University of Pennsylvania, IBM Research
+  - family-names: Roth
+    given-names: Aaron
+    affiliation: University of Pennsylvania
+  - family-names: Goel
+    given-names: Surbhi
+    affiliation: University of Pennsylvania
+date-released: 2025-04-22
+version: 1.0.0
+repository-code: https://github.com/maxrubintoles/Conformal_LM_Reasoning  # ← update this to your actual GitHub repo
+conference: International Conference on Learning Representations (ICLR)
+year: 2025
+url: https://openreview.net/forum?id=AJpUZd8Clb
