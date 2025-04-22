@@ -1,5 +1,5 @@
 # Conformal Language Model Reasoning with Coherent Factuality
-This is the repository for the paper "Conformal Language Model Reasoning with Cohrerent Factuality" by [Maya Gambhir](mayapalgambhir.com), [Maxon Rubin-Toles](https://maxrubintoles.github.io/), [Keshav Ramji](https://keshavramji.com/), [Aaron Roth](https://www.cis.upenn.edu/~aaroth/), and [Surbhi Goel](surbhigoel.com).
+This is the repository for the paper ["Conformal Language Model Reasoning with Cohrerent Factuality"] (https://openreview.net/forum?id=AJpUZd8Clb) by [Maxon Rubin-Toles](https://maxrubintoles.github.io/), [Maya Gambhir](mayapalgambhir.com), , [Keshav Ramji](https://keshavramji.com/), [Aaron Roth](https://www.cis.upenn.edu/~aaroth/), and [Surbhi Goel](surbhigoel.com).
 
 Much of this code was forked from Mohri and Hashimoto's [repository](https://github.com/tatsu-lab/conformal-factual-lm/blob/main/README.md?plain=1) for "Language Models with Conformal Factuality Guarantees."
 
