@@ -1,6 +1,5 @@
 # Conformal Language Model Reasoning with Coherent Factuality
-This is the repository for the paper ["Conformal Language Model Reasoning with Cohrerent Factuality"](https://openreview.net/forum?id=AJpUZd8Clb)
-_In Proceedings of the International Conference on Learning Representations (ICLR), 2025_
+This is the repository for the paper ["Conformal Language Model Reasoning with Cohrerent Factuality"](https://openreview.net/forum?id=AJpUZd8Clb) in _Proceedings of the International Conference on Learning Representations (ICLR), 2025_
 by [Maxon Rubin-Toles](https://maxrubintoles.github.io/), [Maya Gambhir](mayapalgambhir.com), [Keshav Ramji](https://keshavramji.com/), [Aaron Roth](https://www.cis.upenn.edu/~aaroth/), and [Surbhi Goel](surbhigoel.com).
 
 Much of this code was forked from Mohri and Hashimoto's [repository](https://github.com/tatsu-lab/conformal-factual-lm/blob/main/README.md?plain=1) for ["Language Models with Conformal Factuality Guarantees"](https://arxiv.org/abs/2402.10978).
